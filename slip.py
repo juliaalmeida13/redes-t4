@@ -77,17 +77,12 @@ class Enlace:
         # vir quebrado de várias formas diferentes - por exemplo, podem vir
         # apenas pedaços de um quadro, ou um pedaço de quadro seguido de um
         # pedaço de outro, ou vários quadros de uma vez só.
-        # Adicionar os dados recebidos ao resíduo
+
         self.buffer += dados
-
-        # Separar os dados no resíduo pelo separador
-        dados_residuo = self.buffer.split(b'\xc0')
-
-        # Jogar o que sobrou de mensagem incompleta de volta no resíduo
-        self.buffer = dados_residuo[-1]
+        self.buffer = self.buffer.split(b'\xc0')[-1]
 
         # Ignorar os dados vazios
-        dados_nao_vazios = [dado for dado in dados_residuo[:-1] if dado != b'']
+        dados_nao_vazios = [dado for dado in self.buffer[:-1] if dado != b'']
 
         # Para cada datagrama não-vazio, enviar pelo callback
         for datagrama in dados_nao_vazios:
