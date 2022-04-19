@@ -80,7 +80,6 @@ class Enlace:
 
         self.buffer += dados
         dadinhos = self.buffer.split(b'\xc0')
-        self.buffer = dadinhos[-1]
 
         # Ignorar os dados vazios
         dados_nao_vazios = [dado for dado in dadinhos[:-1] if dado != b'']
@@ -92,6 +91,6 @@ class Enlace:
                 self.callback(datagrama_original)
             except:
                 import traceback
-                traceback.print_exc() 
+                traceback.print_exc()
         pass
                 
