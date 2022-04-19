@@ -48,9 +48,15 @@ class Enlace:
     def registrar_recebedor(self, callback):
         self.callback = callback
     
+    #Passos 1 e 2
     def escape(self, datagrama):
         datagrama = datagrama.replace(b'\xdb', b'\xdb\xdd')
         datagrama = datagrama.replace(b'\xc0', b'\xdb\xdc')
+        return datagrama
+    
+    def des_escape(self, datagrama):
+        datagrama = datagrama.replace(b'\xdb\xdc', b'\xc0')
+        datagrama = datagrama.replace(b'\xdb\xdd', b'\xdb')
         return datagrama
 
     def enviar(self, datagrama):
@@ -71,4 +77,22 @@ class Enlace:
         # vir quebrado de várias formas diferentes - por exemplo, podem vir
         # apenas pedaços de um quadro, ou um pedaço de quadro seguido de um
         # pedaço de outro, ou vários quadros de uma vez só.
+
+        dados = dados.split(b'\xc0')
+        # Colocar mensagens incompletas em um resíduo
+        self.residuo = dados[-1]
+
+        for datagrama in dados:
+            if dados != b'':
+                datagrama = self.des_escape(datagrama)
+                try:
+                    self.callback(datagrama)
+                except:
+                    # ignora a exceção, mas mostra na tela
+                    import traceback
+                    traceback.print_exc()
+                finally:
+                    # faça aqui a limpeza necessária para garantir que não vão sobrar
+                    # pedaços do datagrama em nenhum buffer mantido por você
+                    dados = b''
         pass
