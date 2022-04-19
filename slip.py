@@ -77,14 +77,14 @@ class Enlace:
         # vir quebrado de várias formas diferentes - por exemplo, podem vir
         # apenas pedaços de um quadro, ou um pedaço de quadro seguido de um
         # pedaço de outro, ou vários quadros de uma vez só.
-
+        dados = self.buffer + dados
         dados = dados.split(b'\xc0')
         # Colocar mensagens incompletas em um resíduo
         self.residuo = dados[-1]
 
-        for datagrama in dados:
-            if dados != b'':
-                datagrama = self.des_escape(datagrama)
+        for i in range(len(dados)-1):
+            datagrama = self.des_escape(datagrama)
+            if(datagrama != b''):
                 try:
                     self.callback(datagrama)
                 except:
@@ -93,6 +93,6 @@ class Enlace:
                     traceback.print_exc()
                 finally:
                     # faça aqui a limpeza necessária para garantir que não vão sobrar
-                    # pedaços do datagrama em nenhum buffer mantido por você
-                    dados = b''
+                    # pedaços do datagrama em nenhum buffer mantido por você                    
+                    self.buffer = b''            
         pass
