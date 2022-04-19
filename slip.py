@@ -68,7 +68,8 @@ class Enlace:
         self.linha_serial.enviar(b'\xc0' + self.escape(datagrama) + b'\xc0') #Adiciona os caracteres necessários no início e no fim, além de 
                                                                              # encapar os caracteres especiais do datagrama
         pass
-
+    
+    #Passos 3 e 4 
     def __raw_recv(self, dados):
         # TODO: Preencha aqui com o código para receber dados da linha serial.
         # Trate corretamente as sequências de escape. Quando ler um quadro
@@ -80,11 +81,11 @@ class Enlace:
 
         self.buffer += dados
         dadinhos = self.buffer.split(b'\xc0')
+        self.residuo = dadinhos[-1]
 
         # Ignorar os dados vazios
         dados_nao_vazios = [dado for dado in dadinhos[:-1] if dado != b'']
 
-        # Para cada datagrama não-vazio, enviar pelo callback
         for datagrama in dados_nao_vazios:
             datagrama_original = self.des_escape(datagrama)
             try:
