@@ -81,7 +81,7 @@ class Enlace:
 
         self.buffer += dados
         dadinhos = self.buffer.split(b'\xc0')
-        self.residuo = dadinhos[-1]
+        self.buffer = dadinhos[-1]
 
         # Ignorar os dados vazios
         dados_nao_vazios = [dado for dado in dadinhos[:-1] if dado != b'']
