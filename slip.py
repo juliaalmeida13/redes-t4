@@ -79,10 +79,11 @@ class Enlace:
         # pedaço de outro, ou vários quadros de uma vez só.
 
         self.buffer += dados
-        self.buffer = self.buffer.split(b'\xc0')[-1]
+        dadinhos = self.buffer.split(b'\xc0')
+        self.buffer = dadinhos[-1]
 
         # Ignorar os dados vazios
-        dados_nao_vazios = [dado for dado in self.buffer[:-1] if dado != b'']
+        dados_nao_vazios = [dado for dado in dadinhos[:-1] if dado != b'']
 
         # Para cada datagrama não-vazio, enviar pelo callback
         for datagrama in dados_nao_vazios:
@@ -91,6 +92,6 @@ class Enlace:
                 self.callback(datagrama_original)
             except:
                 import traceback
-                traceback.print_exc()
+                traceback.print_exc() 
         pass
                 
