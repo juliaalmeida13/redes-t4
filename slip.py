@@ -80,19 +80,14 @@ class Enlace:
         dados = self.buffer + dados
         dados = dados.split(b'\xc0')
         # Colocar mensagens incompletas em um resíduo
-        self.residuo = dados[-1]
+        self.buffer = dados[-1]
 
-        for i in range(len(dados)-1):
-            datagrama = self.des_escape(datagrama)
-            if(datagrama != b''):
-                try:
-                    self.callback(datagrama)
-                except:
-                    # ignora a exceção, mas mostra na tela
-                    import traceback
-                    traceback.print_exc()
-                finally:
-                    # faça aqui a limpeza necessária para garantir que não vão sobrar
-                    # pedaços do datagrama em nenhum buffer mantido por você                    
-                    self.buffer = b''            
+        dados_nao_vazios = [dado for dado in self.buffer[:-1] if dado != b'']
+        for datagrama in dados_nao_vazios:
+            datagrama_original = self.des_escape(datagrama)
+            try:
+                self.callback(datagrama_original)
+            except:
+                import traceback
+                traceback.print_exc()         
         pass
